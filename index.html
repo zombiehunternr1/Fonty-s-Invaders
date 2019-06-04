@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Spaceinvaders</title>
+</head>
+<body>
+<h1>Space Invaders in JavaScript | Interval : <span id="inter"></span> ms</h1>
+<audio id="shoot"><source src="sound/shoot.mp3"></audio>
+<audio id="destroy"><source src="sound/destroy.mp3"></audio>
+<audio id="background" autoplay loop><source src="sound/background.mp3"></audio>
+<div id="levelDiv">
+    <h2>Level :</h2>
+    <span id="level"></span>
+
+</div>
+<div id="scoreDiv">
+    <h2>Score :</h2>
+    <span id="score"></span>
+
+</div>
+<div id="alivesDiv">
+    <h2>Aliens :</h2>
+    <span id="alives"></span>
+
+</div>
+
+<button onclick="muteBackground()" id="mute-button" type="button">Mute</button>
+
+<canvas id="aliensCanvas" width="530" height="500"></canvas>
+
+</body>
+<script src="js/game.js"></script>
+</html>
