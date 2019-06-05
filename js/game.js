@@ -4,15 +4,15 @@ var Alien = function (aType, aLine, aCol) {
     this.line = aLine;
     this.column = aCol;
     this.alive = true;
-    this.height = 20;
-    this.width = 28;
-    this.positionX = 100 + this.width * this.column;
-    this.positionY = 100 + 30 * this.line;
+    this.height = 21 * sizeAliens;
+    this.width = 28 * sizeAliens;
+    this.positionX = (100 + ((28*sizeAliens)+4) * this.column);
+    this.positionY = (100 + ((21*sizeAliens)+4) * this.line);
     this.direction = 1;
     this.state = 0;
 
     this.changeState = function () { //change the state (2 different images for each alien)
-        this.state = !this.state ? 20 : 0;
+        this.state = !this.state ? 1 : 0;
     };
 
     this.down = function () { //down the alien after changing direction
@@ -23,7 +23,7 @@ var Alien = function (aType, aLine, aCol) {
         if (this.positionY >= Game.height - 50) {
             Game.over();
         }
-        this.positionX = this.positionX + 5 * Game.direction;
+        this.positionX = this.positionX + 3 * Game.direction;
         this.changeState();
         if (this.alive) this.draw();
     };
@@ -42,25 +42,25 @@ var Alien = function (aType, aLine, aCol) {
         if (this.alive) { //draw the alien
             canvas.drawImage(
                 pic,
-                this.width * (this.type - 1),
-                this.state,
-                this.width,
-                this.height,
+                28 * (this.type -1),
+                21 * (this.state),
+                28,
+                21,
                 this.positionX,
                 this.positionY,
-                this.width,
-                this.height);
+                this.width * sizeAliens,
+                this.height * sizeAliens);
         } else if (this.alive == null) { //draw the explosion
             canvas.drawImage(
                 pic,
                 85,
-                20,
+                21,
                 28,
-                20,
-                this.positionX,
+                21,
+                this.positionX ,
                 this.positionY,
-                this.width,
-                this.height);
+                this.width * sizeAliens,
+                this.height * sizeAliens);
             this.alive = false; //alien won't be displayed any more
         }
     };
@@ -86,7 +86,7 @@ player = {
     },
 
     draw: function () { //draws the player
-        canvas.drawImage(pic, 85, 0, 28, 20, this.position, 470, 28, 20);
+        canvas.drawImage(pic, 85, 0, 28, 20, this.position, 471, 45, 35);
     },
 
     fire: function () { //shot
@@ -140,7 +140,7 @@ player = {
         draw: function () { //draw the ray and check collision with aliens
             if (this.active) {
                 canvas.beginPath();
-                canvas.strokeStyle = 'white';
+                canvas.strokeStyle = 'red';
                 canvas.lineWidth = 2;
                 canvas.moveTo(this.positionX, this.positionY);
                 canvas.lineTo(this.positionX, this.positionY + this.length);
@@ -176,7 +176,7 @@ Game = {
     height: 0,
     width: 0,
     interval: 0,
-    intervalDefault: 1000,
+    intervalDefault: 500,
     direction: 1,
     animation: null,
     alives: 1,
@@ -197,7 +197,6 @@ Game = {
         player.init();
         this.refreshScore(0);
         document.getElementById('level').innerHTML = this.level;
-        document.getElementById('inter').innerHTML = this.interval;
     },
 
     changeDirection: function () { //change the direction (left or right)
@@ -254,23 +253,27 @@ Game = {
         else this.interval = newInterval;
 
         this.animation = setInterval("Game.animate()", this.interval);
-        document.getElementById('inter').innerHTML = this.interval;
     },
     onkeydown: function (ev) { //key down event
         if (ev.keyCode == 37) player.toleft = true;
+        else if (ev.keyCode == 65) player.toleft = true;
         else if (ev.keyCode == 39) player.toright = true;
+        else if (ev.keyCode == 68) player.toright = true;
         else if (ev.keyCode == 32) player.fire();
+        else if (ev.keyCode == 38) player.fire();
         else return;
     },
     onkeyup: function (ev) { //key up event
         if (ev.keyCode == 37) player.toleft = false;
+        else if (ev.keyCode == 65) player.toleft = false;
         else if (ev.keyCode == 39) player.toright = false;
+        else if (ev.keyCode == 68) player.toright = false;
         else return;
     },
     over: function () { //ends the game
         clearInterval(this.animation);
         canvas.clearRect(0, 0, this.width, this.height);
-        canvas.font = "40pt Calibri,Geneva,Arial";
+        canvas.font = "85pt Press Start 2P, cursive";
         canvas.strokeStyle = "rgb(FF,0,0)";
         canvas.fillStyle = "rgb(0,20,180)";
         canvas.strokeText("Game Over", this.width / 2 - 150, this.height / 2 - 10);
@@ -301,7 +304,6 @@ Game = {
         document.getElementById('level').innerHTML = this.level;
         this.play();
         this.increaseSpeed(this.interval);
-        document.getElementById('inter').innerHTML = this.interval;
     }
 };
 
@@ -324,13 +326,15 @@ var shootSound = document.getElementById('shoot');
 var mute = false;
 var element = document.getElementById('aliensCanvas');
 
+var sizeAliens = 1.2;
+
 if (element.getContext) {
     var canvas = element.getContext('2d');
 
     var pic = new Image();
-    pic.src = 'https://github.com/gregquat/inbeda/raw/master/sprite.png';
+    pic.src = 'img/sprite1.png';
 
-    Game.init(530, 500);
+    Game.init(630, 500);
 
     document.body.onkeydown = function (ev) {
         Game.onkeydown(ev);
